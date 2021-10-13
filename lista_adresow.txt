@@ -1,0 +1,4 @@
+1|Grzegorz|Brzeczyszczykiewicz|4534556543|brzeczy@.com|Cystersow 43 Warszawa
+2|Marek|Ma˜lanka|66346159|mahhu7@gmail.com|Opolska 20 Gniezno
+3|Karol|Maslo|453434323|kolol@com|Bojki 81 Krakow
+4|Grazyna|Wolska|54565553|grazka@com|Dolina Nidy 8/45 Nibylandia
