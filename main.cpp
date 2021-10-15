@@ -6,6 +6,11 @@
 
 using namespace std;
 
+struct Uzytkownik {
+    int id;
+    string nazwa, haslo;
+};
+
 struct Adresat {
     int id = 0;
     string imie = "", nazwisko = "", numerTelefonu = "", email = "", adres = "";
