@@ -18,16 +18,82 @@ struct Adresat {
 
 vector<Adresat> adresaci;
 
-int wybierzOpcjeZMenuGlownego() {
+int wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
     system("cls");
     int n;
     cout << "KSIAZKA ADRESOWA" << endl;
     cout << "================" << endl;
-    cout << "1. Dodaj adresata\n2. Wyszukaj po imieniu\n3. Wyszukaj po nazwisku\n4. Wyœwietl wszystkich adresatów\n";
-    cout << "5. Usuñ adresata\n6. Edytuj adresata\n9. Zakoñcz program\n";
-    cout << "Twój wybór: ";
+    if (idZalogowanegoUzytkownika ==0) {
+        cout << "1. Rejestracja\n2. Logowanie\n9. ZakoÅ„cz program.\n";
+    } else {
+        cout << "1. Dodaj adresata\n2. Wyszukaj po imieniu\n3. Wyszukaj po nazwisku\n4. WyÅ›wietl wszystkich adresatÃ³w\n";
+        cout << "5. UsuÅ„ adresata\n6. Edytuj adresata\n9. ZakoÅ„cz program\n";
+    }
+    cout << "TwÃ³j wybÃ³r: ";
     cin >> n;
     return n;
+}
+
+Uzytkownik (rejestracja(vector <Uzytkownik> uzytkownicy)) {
+    string nazwa, haslo;
+    int iloscUzytkownikow = uzytkownicy.size();
+
+    cout << "Podaj nazwÄ™ uÅ¼ytkownika: ";
+    cin >> nazwa;
+    int i = 0;
+
+    while(i < iloscUzytkownikow) {
+        if(uzytkownicy[i].nazwa == nazwa) {
+            cout << "Taki uÅ¼ytkownik istnieje. Wpisz innÄ… nazwÄ™ uÅ¼ytkownika: ";
+            cin >> nazwa;
+            i = 0;
+        } else {
+            i++;
+        }
+    }
+    cout << "Podaj hasÅ‚o: ";
+    cin >> haslo;
+    Uzytkownik nowyUzytkownik;
+    nowyUzytkownik.nazwa = nazwa;
+    nowyUzytkownik.haslo = haslo;
+    if(iloscUzytkownikow == 0)
+        nowyUzytkownik.id = 1;
+    else
+        nowyUzytkownik.id = uzytkownicy[iloscUzytkownikow-1].id + 1;
+    cout << "Konto zaÅ‚oÅ¼one" << endl;
+    Sleep(1000);
+    return nowyUzytkownik;
+}
+
+int logowanie(vector <Uzytkownik> uzytkownicy) {
+    string nazwa, haslo;
+    int iloscUzytkownikow = uzytkownicy.size();
+    cout << "Podaj login :";
+    cin >> nazwa;
+    int i = 0;
+
+    while(i < iloscUzytkownikow) {
+
+        if(uzytkownicy[i].nazwa == nazwa) {
+
+            for(int j = 0; j<3; j++) {
+                cout << "Podaj hasÅ‚o. PozostaÅ‚o prÃ³b " << 3 - j << ":";
+                cin >> haslo;
+                if(uzytkownicy[i].haslo == haslo) {
+
+                    cout << "ZalogowaÅ‚eÅ› siÄ™." <<endl;;
+                    Sleep(1000);
+                    return uzytkownicy[i].id;
+                }
+            }
+            Sleep(3000);
+            return 0;
+        }
+        i++;
+    }
+    cout << "Nie ma uÅ¼ytkownika z takim loginem" << endl;
+    Sleep(1000);
+    return 0;
 }
 
 void zapiszDoPliku() {
@@ -84,7 +150,7 @@ void DodajAdresata() {
     cout << "DODAWANIE NOWEJ OSOBY" << endl;
     cout << "=====================" << endl;
 
-    cout << "Podaj imiê: ";
+    cout << "Podaj imiÄ™: ";
     cin >> adresaci[index].imie;
 
     cout << "Podaj nazwisko: ";
@@ -103,7 +169,7 @@ void DodajAdresata() {
     cin >> adresaci[index].email;
 
     system("cls");
-    cout << "Dodano now¹ osobê";
+    cout << "Dodano nowÄ… osobÄ™";
     Sleep(2000);
 }
 void wyswietlTegoAdresata (int index) {
@@ -118,7 +184,7 @@ void wyswietlTegoAdresata (int index) {
 }
 void wyswietlWszystkichAdresatow() {
     system("cls");
-    cout << "LISTA ADRESATÓW" << endl;
+    cout << "LISTA ADRESATÃ“W" << endl;
     cout << "===============" << endl;
 
     for(int i = 0; i<adresaci.size(); i ++)
@@ -135,7 +201,7 @@ void wyswietlAdresataImie() {
     system("cls");
     cout << "Szukaj po imieniu" << endl;
     cout << "=================" << endl;
-    cout << "Podaj imiê" << endl;
+    cout << "Podaj imiÄ™" << endl;
 
     cin >> imie;
 
@@ -151,9 +217,9 @@ void wyswietlAdresataImie() {
         }
     }
     if(znacznikZnalezienia == false)
-        cout << "Takiej osoby nie ma w twojej ksi¹¿ce";
+        cout << "Takiej osoby nie ma w twojej ksiÄ…Å¼ce";
 
-    cout << "\n\n\nAby wyjœæ naciœnij Enter";
+    cout << "\n\n\nAby wyjÅ›Ä‡ naciÅ›nij Enter";
 
     getchar();
     getchar();
@@ -183,7 +249,7 @@ void wyswietlAdresataNazwisko() {
         }
     }
     if(znacznikZnalezienia == false)
-        cout << "Takiej osoby nie ma w twojej ksi¹zce";
+        cout << "Takiej osoby nie ma w twojej ksiÄ…Å¼ce";
 
     cout << "\n\n\nAby wyjsc nacisnij Enter";
 
@@ -199,7 +265,7 @@ int znajdzAdresataPoID(int numerID) {
         }
     }
     system("cls");
-    cout << "B³êdne ID. Spróbuj ponownie";
+    cout << "BÂ³Ãªdne ID. SprÃ³buj ponownie";
     Sleep(2000);
     return -1;
 }
@@ -219,13 +285,13 @@ void usunAdresata() {
     cout << "=================" << endl << endl;
     wyswietlTegoAdresata(indexAdresata);
     while(true) {
-        cout << endl << "Czy napewno chcesz go usun¹æ? [t/n] ";
+        cout << endl << "Czy napewno chcesz go usunÄ…Ä‡? [t/n] ";
         cin >> potwierdzenie;
         if(potwierdzenie == 't') {
             //vector<Adresat>::iterator index = adresaci.begin()
             adresaci.erase(adresaci.begin() + indexAdresata);
             system("cls");
-            cout << "Usuniêto";
+            cout << "UsuniÄ™to";
             Sleep(2000);
             break;
         } else if(potwierdzenie == 'n')
@@ -250,9 +316,9 @@ void edytujAdresata() {
         cout << "EDYCJA" << endl;
         cout << "======" << endl << endl;
         wyswietlTegoAdresata(indexAdresata);
-        cout << "\n\n1. Edytuj Imiê\n2. Edytuj nazwisko\n3. Edytuj numer telefonu\n";
-        cout << "4. Edytuj email\n5. Edytuj adres\n9. Powrót do menu\n";
-        cout << "Twój wybór: ";
+        cout << "\n\n1. Edytuj ImiÄ™\n2. Edytuj nazwisko\n3. Edytuj numer telefonu\n";
+        cout << "4. Edytuj email\n5. Edytuj adres\n9. PowrÃ³t do menu\n";
+        cout << "TwÃ³j wybÃ³r: ";
         cin >> numerPola;
         switch(numerPola) {
         case 1:
@@ -287,34 +353,48 @@ void edytujAdresata() {
 }
 
 int main() {
-    setlocale(LC_ALL,"");
+    vector <Uzytkownik> uzytkownicy;
+    int idZalogowanegoUzytkownika = 0;
     pobierzListeZPliku();
     while(true) {
-        switch (wybierzOpcjeZMenuGlownego()) {
-        case 1:
-            DodajAdresata();
-            break;
-        case 2:
-            wyswietlAdresataImie();
-            break;
-        case 3:
-            wyswietlAdresataNazwisko();
-            break;
-        case 4:
-            wyswietlWszystkichAdresatow();
-            cout << "\n\n\nAby wyjsc nacisnij Enter";
-            getchar();
-            getchar();
-            break;
-        case 5:
-            usunAdresata();
-            break;
-        case 6:
-            edytujAdresata();
-            break;
-        case 9:
-            zapiszDoPliku();
-            return 0;
+        if(idZalogowanegoUzytkownika == 0) {
+            switch  (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
+            case 1:
+                uzytkownicy.push_back(rejestracja(uzytkownicy));
+                break;
+            case 2:
+                idZalogowanegoUzytkownika = logowanie(uzytkownicy);
+                break;
+            case 9:
+                exit(0);
+            }
+        } else {
+            switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
+            case 1:
+                DodajAdresata();
+                break;
+            case 2:
+                wyswietlAdresataImie();
+                break;
+            case 3:
+                wyswietlAdresataNazwisko();
+                break;
+            case 4:
+                wyswietlWszystkichAdresatow();
+                cout << "\n\n\nAby wyjÅ›Ä‡ naciÅ›nij Enter";
+                getchar();
+                getchar();
+                break;
+            case 5:
+                usunAdresata();
+                break;
+            case 6:
+                edytujAdresata();
+                break;
+            case 9:
+                zapiszDoPliku();
+                return 0;
+            }
         }
     }
     return 0;
