@@ -96,27 +96,6 @@ int logowanie(vector <Uzytkownik> uzytkownicy) {
     return 0;
 }
 
-void zapiszAdresaciDoPliku(int idZalogowanegoUzytkownika) {
-    fstream plik;
-
-    plik.open("lista_adresow.txt", ios::out);
-    for(int index = 0; index < adresaci.size(); index ++) {
-        plik << adresaci[index].id << "|" << idZalogowanegoUzytkownika << "|" << adresaci[index].imie << "|";
-        plik << adresaci[index].nazwisko << "|" << adresaci[index].numerTelefonu <<"|";
-        plik << adresaci[index].email << "|" << adresaci[index].adres << endl;
-    }
-    plik.close();
-}
-
-void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy) {
-    fstream plik;
-
-    plik.open("Uzytkownicy.txt", ios::out);
-    for(int index = 0; index < uzytkownicy.size(); index ++) {
-        plik << uzytkownicy[index].id << "|" << uzytkownicy[index].nazwa << "|" << uzytkownicy[index].haslo << endl;
-    }
-    plik.close();
-}
 string wyodrebnijPole(string &linia) {
     int pozycjaZnakuSeperacji = linia.find("|");
     string pole = "";
@@ -131,6 +110,63 @@ string wyodrebnijPole(string &linia) {
         return linia;
 
 }
+int sprawdzID(string linia){
+
+string IdAdresata = "";
+int i = 0;
+while(linia[i] != '|'){
+    IdAdresata += linia[i];
+    i++;
+}
+return atoi(IdAdresata.c_str());
+}
+
+void zapiszAdresaciDoPliku(int idZalogowanegoUzytkownika) {
+    fstream plik;
+    fstream plikTymczasowy;
+    string linia = "";
+    int idAdresata;
+
+    plik.open("lista_adresow.txt", ios::in);
+    plikTymczasowy.open("tymczasowa_lista_adresow.txt", ios::out);
+
+    while(getline(plik,linia)){
+        idAdresata = sprawdzID(linia);
+
+        if(adresaci.size() > 0 && idAdresata == adresaci[0].id){
+            plikTymczasowy << adresaci[0].id << "|" << idZalogowanegoUzytkownika << "|" << adresaci[0].imie << "|";
+            plikTymczasowy << adresaci[0].nazwisko << "|" << adresaci[0].numerTelefonu <<"|";
+            plikTymczasowy << adresaci[0].email << "|" << adresaci[0].adres << endl;
+            adresaci.erase(adresaci.begin());
+        }
+        else{
+            plikTymczasowy << linia << endl;
+            }
+    }
+    for(int index = 0; index < adresaci.size(); index ++) {
+        plikTymczasowy << adresaci[index].id << "|" << idZalogowanegoUzytkownika << "|" << adresaci[index].imie << "|";
+        plikTymczasowy << adresaci[index].nazwisko << "|" << adresaci[index].numerTelefonu <<"|";
+        plikTymczasowy << adresaci[index].email << "|" << adresaci[index].adres << endl;
+    }
+
+
+    plik.close();
+    plikTymczasowy.close();
+
+    remove("lista_adresow.txt");
+    rename( "tymczasowa_lista_adresow.txt", "lista_adresow.txt" );
+
+}
+
+void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy) {
+    fstream plik;
+
+    plik.open("Uzytkownicy.txt", ios::out);
+    for(int index = 0; index < uzytkownicy.size(); index ++) {
+        plik << uzytkownicy[index].id << "|" << uzytkownicy[index].nazwa << "|" << uzytkownicy[index].haslo << endl;
+    }
+    plik.close();
+}
 
 int ZnajdzIdUzytkownikaWLiniPliku(string linia) {
 
@@ -143,7 +179,6 @@ int ZnajdzIdUzytkownikaWLiniPliku(string linia) {
 int znajdzidOstatniegoAdresata(string linia){
 return atoi(wyodrebnijPole(linia).c_str());
 }
-
 
 int pobierzAdresatowZPliku(int idZalogowanegoUzytkownika) {
     int idOstatniegoAdresata = 0;
@@ -184,6 +219,7 @@ void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy) {
     }
     plik.close();
 }
+
 void DodajAdresata(int idOstatniegoAdresata) {
     system("cls");
     int index = adresaci.size();
@@ -216,6 +252,7 @@ void DodajAdresata(int idOstatniegoAdresata) {
     cout << "Dodano now¹ osobê";
     Sleep(2000);
 }
+
 void wyswietlTegoAdresata (int index) {
 
     cout << "ID:                  " << adresaci[index].id << endl;
@@ -226,6 +263,7 @@ void wyswietlTegoAdresata (int index) {
     cout << "Adres e-mail:        " << adresaci[index].email << endl;
     cout << endl;
 }
+
 void wyswietlWszystkichAdresatow() {
     system("cls");
     cout << "LISTA ADRESATÓW" << endl;
@@ -416,7 +454,6 @@ void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika)
     }
 }
 
-
 int main() {
     setlocale(LC_ALL,"");
     vector <Uzytkownik> uzytkownicy;
@@ -465,8 +502,10 @@ int main() {
                 zapiszUzytkownicyDoPliku(uzytkownicy);
                 break;
             case 9:
-                zapiszAdresaciDoPliku(idZalogowanegoUzytkownika);
-                //wyczyœæ tabllice adresaci
+                //if(adresaci.size() != 0){
+                    zapiszAdresaciDoPliku(idZalogowanegoUzytkownika);
+                    adresaci.clear();
+                //}
                 idZalogowanegoUzytkownika = 0;
                 break;
             }
