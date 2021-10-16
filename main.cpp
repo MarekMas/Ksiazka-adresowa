@@ -27,7 +27,7 @@ int wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
         cout << "1. Rejestracja\n2. Logowanie\n9. Zakończ program.\n";
     } else {
         cout << "1. Dodaj adresata\n2. Wyszukaj po imieniu\n3. Wyszukaj po nazwisku\n4. Wyświetl wszystkich adresatów\n";
-        cout << "5. Usuń adresata\n6. Edytuj adresata\n9. Zakończ program\n";
+        cout << "5. Usuń adresata\n6. Edytuj adresata\n7. Zmień hasło\n9. Wyloguj się\n";
     }
     cout << "Twój wybór: ";
     cin >> n;
@@ -352,6 +352,24 @@ void edytujAdresata() {
 
 }
 
+void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika) {
+
+    string nowehaslo;
+    int iloscUzytkownikow = uzytkownicy.size();
+
+    for(int i = 0; i< iloscUzytkownikow; i++) {
+        if (uzytkownicy[i].id == idZalogowanegoUzytkownika) {
+            cout << "Podaj nowe hasło: ";
+            cin >> nowehaslo;
+            uzytkownicy[i].haslo = nowehaslo;
+            cout << endl << "Hasło zostało zmienione" << endl;
+            Sleep(1000);
+            break;
+        }
+    }
+}
+
+
 int main() {
     vector <Uzytkownik> uzytkownicy;
     int idZalogowanegoUzytkownika = 0;
@@ -391,9 +409,12 @@ int main() {
             case 6:
                 edytujAdresata();
                 break;
+            case 7:
+                zmianaHasla(uzytkownicy, idZalogowanegoUzytkownika);
             case 9:
                 zapiszDoPliku();
-                return 0;
+                idZalogowanegoUzytkownika = 0;
+                break;
             }
         }
     }
