@@ -110,6 +110,7 @@ string wyodrebnijPole(string &linia) {
         return linia;
 
 }
+
 int sprawdzID(string linia){
 
 string IdAdresata = "";
@@ -370,7 +371,6 @@ void usunAdresata() {
         cout << endl << "Czy napewno chcesz go usun¹æ? [t/n] ";
         cin >> potwierdzenie;
         if(potwierdzenie == 't') {
-            //vector<Adresat>::iterator index = adresaci.begin()
             adresaci.erase(adresaci.begin() + indexAdresata);
             system("cls");
             cout << "Usuniêto";
@@ -502,10 +502,8 @@ int main() {
                 zapiszUzytkownicyDoPliku(uzytkownicy);
                 break;
             case 9:
-                //if(adresaci.size() != 0){
-                    zapiszAdresaciDoPliku(idZalogowanegoUzytkownika);
-                    adresaci.clear();
-                //}
+                zapiszAdresaciDoPliku(idZalogowanegoUzytkownika);
+                adresaci.clear();
                 idZalogowanegoUzytkownika = 0;
                 break;
             }
