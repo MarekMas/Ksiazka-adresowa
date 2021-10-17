@@ -1,4 +1,7 @@
 bin/
+obj/
+Schemat/
 ksiazka_adresowa2.cbp
 ksiazka_adresowa2.depend
-obj/
+ksiazka_adresowa2.layout
+*.txt
