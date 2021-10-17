@@ -22,17 +22,17 @@ char wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
     cout << "KSIAZKA ADRESOWA" << endl;
     cout << "================" << endl;
     if (idZalogowanegoUzytkownika ==0) {
-        cout << "1. Rejestracja\n2. Logowanie\n9. Zakoñcz program.\n";
+        cout << "1. Rejestracja\n2. Logowanie\n9. Zakoäcz program.\n";
     } else {
-        cout << "1. Dodaj adresata\n2. Wyszukaj po imieniu\n3. Wyszukaj po nazwisku\n4. Wyœwietl wszystkich adresatów\n";
-        cout << "5. Usuñ adresata\n6. Edytuj adresata\n7. Zmieñ has³o\n9. Wyloguj siê\n";
+        cout << "1. Dodaj adresata\n2. Wyszukaj po imieniu\n3. Wyszukaj po nazwisku\n4. Wy˜wietl wszystkich adresat¢w\n";
+        cout << "5. Usuä adresata\n6. Edytuj adresata\n7. Zmieä hasˆo\n9. Wyloguj si©\n";
     }
-    cout << "Twój wybór: ";
+    cout << "Tw¢j wyb¢r: ";
     cin >> n;
     return n;
 }
 
-Uzytkownik (rejestracja(vector <Uzytkownik> uzytkownicy)) {
+Uzytkownik rejestracja(vector <Uzytkownik> uzytkownicy) {
     system("cls");
     string nazwa, haslo;
     int iloscUzytkownikow = uzytkownicy.size();
@@ -40,20 +40,20 @@ Uzytkownik (rejestracja(vector <Uzytkownik> uzytkownicy)) {
     cout << "REJESTRACJA" << endl;
     cout << "===========" << endl;
 
-    cout << "Podaj nazwê u¿ytkownika: ";
+    cout << "Podaj nazw© u¾ytkownika: ";
     cin >> nazwa;
     int i = 0;
 
     while(i < iloscUzytkownikow) {
         if(uzytkownicy[i].nazwa == nazwa) {
-            cout << "Taki u¿ytkownik istnieje. Wpisz inn¹ nazwê u¿ytkownika: ";
+            cout << "Taki u¾ytkownik istnieje. Wpisz inn¥ nazw© u¾ytkownika: ";
             cin >> nazwa;
             i = 0;
         } else {
             i++;
         }
     }
-    cout << "Podaj has³o: ";
+    cout << "Podaj hasˆo: ";
     cin >> haslo;
     Uzytkownik nowyUzytkownik;
     nowyUzytkownik.nazwa = nazwa;
@@ -62,7 +62,7 @@ Uzytkownik (rejestracja(vector <Uzytkownik> uzytkownicy)) {
         nowyUzytkownik.id = 1;
     else
         nowyUzytkownik.id = uzytkownicy[iloscUzytkownikow-1].id + 1;
-    cout << "Konto za³o¿one" << endl;
+    cout << "Konto zaˆo¾one" << endl;
     Sleep(1000);
     return nowyUzytkownik;
 }
@@ -84,11 +84,11 @@ int logowanie(vector <Uzytkownik> uzytkownicy) {
         if(uzytkownicy[i].nazwa == nazwa) {
 
             for(int j = 0; j<3; j++) {
-                cout << "Podaj has³o. Pozosta³o prób " << 3 - j << ":";
+                cout << "Podaj hasˆo. Pozostaˆo pr¢b " << 3 - j << ":";
                 cin >> haslo;
                 if(uzytkownicy[i].haslo == haslo) {
 
-                    cout << "Zalogowa³eœ siê." <<endl;;
+                    cout << "Zalogowaˆe˜ si©." <<endl;;
                     Sleep(1000);
                     return uzytkownicy[i].id;
                 }
@@ -98,7 +98,7 @@ int logowanie(vector <Uzytkownik> uzytkownicy) {
         }
         i++;
     }
-    cout << "Nie ma u¿ytkownika z takim loginem" << endl;
+    cout << "Nie ma u¾ytkownika z takim loginem" << endl;
     Sleep(1000);
     return 0;
 }
@@ -118,11 +118,10 @@ string wyodrebnijPole(string &linia) {
 
 }
 
-string sprawdzPole(string linia, int nrPola){
+string sprawdzPole(string linia, int nrPola) {
     string pole = "";
-    for(int i = 0; i< nrPola; i++)
-    {
-       pole =  wyodrebnijPole(linia);
+    for(int i = 0; i< nrPola; i++) {
+        pole =  wyodrebnijPole(linia);
     }
 
     return pole;
@@ -138,20 +137,19 @@ void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
     plik.open("lista_adresow.txt", ios::in);
     plikTymczasowy.open("tymczasowa_lista_adresow.txt", ios::out);
 
-    while(getline(plik,linia)){
+    while(getline(plik,linia)) {
         idAdresata = atoi(sprawdzPole(linia,1).c_str());
         idUzytkownika = atoi(sprawdzPole(linia,2).c_str());
 
 
-        if(adresaci.size() > 0 && idAdresata == adresaci[0].id){
+        if(adresaci.size() > 0 && idAdresata == adresaci[0].id) {
             plikTymczasowy << adresaci[0].id << "|" << idZalogowanegoUzytkownika << "|" << adresaci[0].imie << "|";
             plikTymczasowy << adresaci[0].nazwisko << "|" << adresaci[0].numerTelefonu <<"|";
             plikTymczasowy << adresaci[0].email << "|" << adresaci[0].adres << endl;
             adresaci.erase(adresaci.begin());
-        }
-        else if (idUzytkownika != idZalogowanegoUzytkownika){
+        } else if (idUzytkownika != idZalogowanegoUzytkownika) {
             plikTymczasowy << linia << endl;
-            }
+        }
     }
     for(int index = 0; index < adresaci.size(); index ++) {
         plikTymczasowy << adresaci[index].id << "|" << idZalogowanegoUzytkownika << "|" << adresaci[index].imie << "|";
@@ -186,8 +184,8 @@ int ZnajdzIdUzytkownikaWLiniPliku(string linia) {
     return IdUzytkownikaZLiniPliku;
 }
 
-int znajdzidOstatniegoAdresata(string linia){
-return atoi(wyodrebnijPole(linia).c_str());
+int znajdzidOstatniegoAdresata(string linia) {
+    return atoi(wyodrebnijPole(linia).c_str());
 }
 
 int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika) {
@@ -240,7 +238,7 @@ void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata) {
     cout << "DODAWANIE NOWEJ OSOBY" << endl;
     cout << "=====================" << endl;
 
-    cout << "Podaj imiê: ";
+    cout << "Podaj imi©: ";
     cin >> adresaci[index].imie;
 
     cout << "Podaj nazwisko: ";
@@ -259,7 +257,7 @@ void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata) {
     cin >> adresaci[index].email;
 
     system("cls");
-    cout << "Dodano now¹ osobê";
+    cout << "Dodano now¥ osob©";
     Sleep(2000);
 }
 
@@ -276,7 +274,7 @@ void wyswietlTegoAdresata (Adresat tenAdresat) {
 
 void wyswietlWszystkichAdresatow(vector<Adresat> adresaci) {
     system("cls");
-    cout << "LISTA ADRESATÓW" << endl;
+    cout << "LISTA ADRESATàW" << endl;
     cout << "===============" << endl;
 
     for(int i = 0; i<adresaci.size(); i ++)
@@ -293,7 +291,7 @@ void wyswietlAdresataImie(vector<Adresat> adresaci) {
     system("cls");
     cout << "Szukaj po imieniu" << endl;
     cout << "=================" << endl;
-    cout << "Podaj imiê" << endl;
+    cout << "Podaj imi©" << endl;
 
     cin >> imie;
 
@@ -309,9 +307,9 @@ void wyswietlAdresataImie(vector<Adresat> adresaci) {
         }
     }
     if(znacznikZnalezienia == false)
-        cout << "Takiej osoby nie ma w twojej ksi¹¿ce";
+        cout << "Takiej osoby nie ma w twojej ksi¥¾ce";
 
-    cout << "\n\n\nAby wyjœæ naciœnij Enter";
+    cout << "\n\n\nAby wyj˜† naci˜nij Enter";
 
     getchar();
     getchar();
@@ -341,7 +339,7 @@ void wyswietlAdresataNazwisko(vector<Adresat> adresaci) {
         }
     }
     if(znacznikZnalezienia == false)
-        cout << "Takiej osoby nie ma w twojej ksi¹¿ce";
+        cout << "Takiej osoby nie ma w twojej ksi¥¾ce";
 
     cout << "\n\n\nAby wyjsc nacisnij Enter";
 
@@ -357,7 +355,7 @@ int znajdzAdresataPoID(vector<Adresat> adresaci, int numerID) {
         }
     }
     system("cls");
-    cout << "B³êdne ID. Spróbuj ponownie";
+    cout << "Bˆ©dne ID. Spr¢buj ponownie";
     Sleep(2000);
     return -1;
 }
@@ -377,12 +375,12 @@ void usunAdresata(vector<Adresat>& adresaci) {
     cout << "=================" << endl << endl;
     wyswietlTegoAdresata(adresaci[indexAdresata]);
     while(true) {
-        cout << endl << "Czy napewno chcesz go usun¹æ? [t/n] ";
+        cout << endl << "Czy napewno chcesz go usun¥†? [t/n] ";
         cin >> potwierdzenie;
         if(potwierdzenie == 't') {
             adresaci.erase(adresaci.begin() + indexAdresata);
             system("cls");
-            cout << "Usuniêto";
+            cout << "Usuni©to";
             Sleep(2000);
             break;
         } else if(potwierdzenie == 'n')
@@ -407,9 +405,9 @@ void edytujAdresata(vector<Adresat>& adresaci) {
         cout << "EDYCJA" << endl;
         cout << "======" << endl << endl;
         wyswietlTegoAdresata(adresaci[indexAdresata]);
-        cout << "\n\n1. Edytuj Imiê\n2. Edytuj nazwisko\n3. Edytuj numer telefonu\n";
-        cout << "4. Edytuj adres\n5. Edytuj email\n9. Powrót do menu\n";
-        cout << "Twój wybór: ";
+        cout << "\n\n1. Edytuj Imi©\n2. Edytuj nazwisko\n3. Edytuj numer telefonu\n";
+        cout << "4. Edytuj adres\n5. Edytuj email\n9. Powr¢t do menu\n";
+        cout << "Tw¢j wyb¢r: ";
         cin >> numerPola;
         cin.clear();
         cin.sync();
@@ -452,10 +450,10 @@ void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika)
 
     for(int i = 0; i< iloscUzytkownikow; i++) {
         if (uzytkownicy[i].id == idZalogowanegoUzytkownika) {
-            cout << "Podaj nowe has³o: ";
+            cout << "Podaj nowe hasˆo: ";
             cin >> nowehaslo;
             uzytkownicy[i].haslo = nowehaslo;
-            cout << endl << "Has³o zosta³o zmienione" << endl;
+            cout << endl << "Hasˆo zostaˆo zmienione" << endl;
             Sleep(1000);
             break;
         }
@@ -463,7 +461,6 @@ void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika)
 }
 
 int main() {
-    setlocale(LC_ALL,"");
     vector <Uzytkownik> uzytkownicy;
     vector<Adresat> adresaci;
     int idZalogowanegoUzytkownika = 0;
@@ -497,7 +494,7 @@ int main() {
                 break;
             case '4':
                 wyswietlWszystkichAdresatow(adresaci);
-                cout << "\n\n\nAby wyjœæ naciœnij Enter";
+                cout << "\n\n\nAby wyj˜† naci˜nij Enter";
                 getchar();
                 getchar();
                 break;
