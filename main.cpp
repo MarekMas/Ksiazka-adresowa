@@ -16,8 +16,6 @@ struct Adresat {
     string imie = "", nazwisko = "", numerTelefonu = "", email = "", adres = "";
 };
 
-vector<Adresat> adresaci;
-
 int wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
     system("cls");
     int n;
@@ -35,8 +33,12 @@ int wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
 }
 
 Uzytkownik (rejestracja(vector <Uzytkownik> uzytkownicy)) {
+    system("cls");
     string nazwa, haslo;
     int iloscUzytkownikow = uzytkownicy.size();
+
+    cout << "REJESTRACJA" << endl;
+    cout << "===========" << endl;
 
     cout << "Podaj nazwê u¿ytkownika: ";
     cin >> nazwa;
@@ -111,28 +113,30 @@ string wyodrebnijPole(string &linia) {
 
 }
 
-int sprawdzID(string linia){
+string sprawdzPole(string linia, int nrPola){
+    string pole = "";
+    for(int i = 0; i< nrPola; i++)
+    {
+       pole =  wyodrebnijPole(linia);
+    }
 
-string IdAdresata = "";
-int i = 0;
-while(linia[i] != '|'){
-    IdAdresata += linia[i];
-    i++;
-}
-return atoi(IdAdresata.c_str());
+    return pole;
 }
 
-void zapiszAdresaciDoPliku(int idZalogowanegoUzytkownika) {
+void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika) {
     fstream plik;
     fstream plikTymczasowy;
     string linia = "";
     int idAdresata;
+    int idUzytkownika;
 
     plik.open("lista_adresow.txt", ios::in);
     plikTymczasowy.open("tymczasowa_lista_adresow.txt", ios::out);
 
     while(getline(plik,linia)){
-        idAdresata = sprawdzID(linia);
+        idAdresata = atoi(sprawdzPole(linia,1).c_str());
+        idUzytkownika = atoi(sprawdzPole(linia,2).c_str());
+
 
         if(adresaci.size() > 0 && idAdresata == adresaci[0].id){
             plikTymczasowy << adresaci[0].id << "|" << idZalogowanegoUzytkownika << "|" << adresaci[0].imie << "|";
@@ -140,7 +144,7 @@ void zapiszAdresaciDoPliku(int idZalogowanegoUzytkownika) {
             plikTymczasowy << adresaci[0].email << "|" << adresaci[0].adres << endl;
             adresaci.erase(adresaci.begin());
         }
-        else{
+        else if (idUzytkownika != idZalogowanegoUzytkownika){
             plikTymczasowy << linia << endl;
             }
     }
@@ -181,7 +185,7 @@ int znajdzidOstatniegoAdresata(string linia){
 return atoi(wyodrebnijPole(linia).c_str());
 }
 
-int pobierzAdresatowZPliku(int idZalogowanegoUzytkownika) {
+int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika) {
     int idOstatniegoAdresata = 0;
     if(idZalogowanegoUzytkownika != 0) {
 
@@ -221,7 +225,7 @@ void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy) {
     plik.close();
 }
 
-void DodajAdresata(int idOstatniegoAdresata) {
+void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata) {
     system("cls");
     int index = adresaci.size();
     adresaci.push_back(Adresat());
@@ -254,30 +258,30 @@ void DodajAdresata(int idOstatniegoAdresata) {
     Sleep(2000);
 }
 
-void wyswietlTegoAdresata (int index) {
+void wyswietlTegoAdresata (Adresat tenAdresat) {
 
-    cout << "ID:                  " << adresaci[index].id << endl;
-    cout << "Imie:                " << adresaci[index].imie << endl;
-    cout << "Nazwisko:            " << adresaci[index].nazwisko << endl;
-    cout << "Telefon:             " << adresaci[index].numerTelefonu << endl;
-    cout << "Adres zamieszkania:  " << adresaci[index].adres << endl;
-    cout << "Adres e-mail:        " << adresaci[index].email << endl;
+    cout << "ID:                  " << tenAdresat.id << endl;
+    cout << "Imie:                " << tenAdresat.imie << endl;
+    cout << "Nazwisko:            " << tenAdresat.nazwisko << endl;
+    cout << "Telefon:             " << tenAdresat.numerTelefonu << endl;
+    cout << "Adres zamieszkania:  " << tenAdresat.adres << endl;
+    cout << "Adres e-mail:        " << tenAdresat.email << endl;
     cout << endl;
 }
 
-void wyswietlWszystkichAdresatow() {
+void wyswietlWszystkichAdresatow(vector<Adresat> adresaci) {
     system("cls");
     cout << "LISTA ADRESATÓW" << endl;
     cout << "===============" << endl;
 
     for(int i = 0; i<adresaci.size(); i ++)
-        wyswietlTegoAdresata(i);
+        wyswietlTegoAdresata(adresaci[i]);
 
 
 
 }
 
-void wyswietlAdresataImie() {
+void wyswietlAdresataImie(vector<Adresat> adresaci) {
     string imie;
     bool znacznikZnalezienia = false;
 
@@ -296,7 +300,7 @@ void wyswietlAdresataImie() {
     for(int i = 0; i<adresaci.size(); i ++) {
         if(adresaci[i].imie == imie) {
             znacznikZnalezienia = true;
-            wyswietlTegoAdresata(i);
+            wyswietlTegoAdresata(adresaci[i]);
         }
     }
     if(znacznikZnalezienia == false)
@@ -308,7 +312,7 @@ void wyswietlAdresataImie() {
     getchar();
 }
 
-void wyswietlAdresataNazwisko() {
+void wyswietlAdresataNazwisko(vector<Adresat> adresaci) {
     string nazwisko;
     bool znacznikZnalezienia = false;
 
@@ -328,7 +332,7 @@ void wyswietlAdresataNazwisko() {
     for(int i = 0; i<adresaci.size(); i ++) {
         if(adresaci[i].nazwisko == nazwisko) {
             znacznikZnalezienia = true;
-            wyswietlTegoAdresata(i);
+            wyswietlTegoAdresata(adresaci[i]);
         }
     }
     if(znacznikZnalezienia == false)
@@ -340,7 +344,7 @@ void wyswietlAdresataNazwisko() {
     getchar();
 }
 
-int znajdzAdresataPoID(int numerID) {
+int znajdzAdresataPoID(vector<Adresat> adresaci, int numerID) {
 
     for(int i = 0; i<adresaci.size(); i ++) {
         if(adresaci[i].id == numerID) {
@@ -353,20 +357,20 @@ int znajdzAdresataPoID(int numerID) {
     return -1;
 }
 
-void usunAdresata() {
+void usunAdresata(vector<Adresat>& adresaci) {
     int indexAdresata = -1;
     int adresatID;
     char potwierdzenie;
     while(indexAdresata == -1) {
-        wyswietlWszystkichAdresatow();
+        wyswietlWszystkichAdresatow(adresaci);
         cout << endl << "Podaj numer ID adresata: ";
         cin >> adresatID;
-        indexAdresata = znajdzAdresataPoID(adresatID);
+        indexAdresata = znajdzAdresataPoID(adresaci, adresatID);
     }
     system("cls");
     cout << "USUWANIE ADRESATA" << endl;
     cout << "=================" << endl << endl;
-    wyswietlTegoAdresata(indexAdresata);
+    wyswietlTegoAdresata(adresaci[indexAdresata]);
     while(true) {
         cout << endl << "Czy napewno chcesz go usun¹æ? [t/n] ";
         cin >> potwierdzenie;
@@ -381,25 +385,25 @@ void usunAdresata() {
     }
 }
 
-void edytujAdresata() {
+void edytujAdresata(vector<Adresat>& adresaci) {
     int adresatID;
     int numerPola = 0;
     int indexAdresata = -1;
     string nowePole;
 
     while(indexAdresata == -1) {
-        wyswietlWszystkichAdresatow();
+        wyswietlWszystkichAdresatow(adresaci);
         cout << endl << "Podaj numer ID adresata: ";
         cin >> adresatID;
-        indexAdresata = znajdzAdresataPoID(adresatID);
+        indexAdresata = znajdzAdresataPoID(adresaci, adresatID);
     }
     while(numerPola != 9) {
         system("cls");
         cout << "EDYCJA" << endl;
         cout << "======" << endl << endl;
-        wyswietlTegoAdresata(indexAdresata);
+        wyswietlTegoAdresata(adresaci[indexAdresata]);
         cout << "\n\n1. Edytuj Imiê\n2. Edytuj nazwisko\n3. Edytuj numer telefonu\n";
-        cout << "4. Edytuj email\n5. Edytuj adres\n9. Powrót do menu\n";
+        cout << "4. Edytuj adres\n5. Edytuj email\n9. Powrót do menu\n";
         cout << "Twój wybór: ";
         cin >> numerPola;
         cin.clear();
@@ -422,16 +426,15 @@ void edytujAdresata() {
             adresaci[indexAdresata].numerTelefonu = nowePole;
             break;
         case 4:
-            cout << "Podaj nowy email: ";
-            getline(cin, nowePole);
-            adresaci[indexAdresata].email = nowePole;
-            break;
-        case 5:
             cout << "Podaj nowy adres: ";
             getline(cin, nowePole);
             adresaci[indexAdresata].adres = nowePole;
             break;
-
+        case 5:
+            cout << "Podaj nowy email: ";
+            getline(cin, nowePole);
+            adresaci[indexAdresata].email = nowePole;
+            break;
         }
     }
 
@@ -457,6 +460,7 @@ void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika)
 int main() {
     setlocale(LC_ALL,"");
     vector <Uzytkownik> uzytkownicy;
+    vector<Adresat> adresaci;
     int idZalogowanegoUzytkownika = 0;
     int idOstatniegoAdresata;
     pobierzUzytkownikowZPliku(uzytkownicy);
@@ -469,7 +473,7 @@ int main() {
                 break;
             case 2:
                 idZalogowanegoUzytkownika = logowanie(uzytkownicy);
-                idOstatniegoAdresata = pobierzAdresatowZPliku(idZalogowanegoUzytkownika);
+                idOstatniegoAdresata = pobierzAdresatowZPliku(adresaci, idZalogowanegoUzytkownika);
                 break;
             case 9:
                 exit(0);
@@ -477,32 +481,33 @@ int main() {
         } else {
             switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
             case 1:
-                DodajAdresata(idOstatniegoAdresata);
+                DodajAdresata(adresaci, idOstatniegoAdresata);
+                idOstatniegoAdresata++;
                 break;
             case 2:
-                wyswietlAdresataImie();
+                wyswietlAdresataImie(adresaci);
                 break;
             case 3:
-                wyswietlAdresataNazwisko();
+                wyswietlAdresataNazwisko(adresaci);
                 break;
             case 4:
-                wyswietlWszystkichAdresatow();
-                cout << "\n\n\nAby wyjœæ naciœnij Enter" << idOstatniegoAdresata;
+                wyswietlWszystkichAdresatow(adresaci);
+                cout << "\n\n\nAby wyjœæ naciœnij Enter";
                 getchar();
                 getchar();
                 break;
             case 5:
-                usunAdresata();
+                usunAdresata(adresaci);
                 break;
             case 6:
-                edytujAdresata();
+                edytujAdresata(adresaci);
                 break;
             case 7:
                 zmianaHasla(uzytkownicy, idZalogowanegoUzytkownika);
                 zapiszUzytkownicyDoPliku(uzytkownicy);
                 break;
             case 9:
-                zapiszAdresaciDoPliku(idZalogowanegoUzytkownika);
+                zapiszAdresaciDoPliku(adresaci,idZalogowanegoUzytkownika);
                 adresaci.clear();
                 idZalogowanegoUzytkownika = 0;
                 break;
