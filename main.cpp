@@ -16,9 +16,9 @@ struct Adresat {
     string imie = "", nazwisko = "", numerTelefonu = "", email = "", adres = "";
 };
 
-int wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
+char wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
     system("cls");
-    int n;
+    char n;
     cout << "KSIAZKA ADRESOWA" << endl;
     cout << "================" << endl;
     if (idZalogowanegoUzytkownika ==0) {
@@ -68,8 +68,13 @@ Uzytkownik (rejestracja(vector <Uzytkownik> uzytkownicy)) {
 }
 
 int logowanie(vector <Uzytkownik> uzytkownicy) {
+    system("cls");
     string nazwa, haslo;
     int iloscUzytkownikow = uzytkownicy.size();
+
+    cout << "LOGOWANIE" << endl;
+    cout << "=========" << endl;
+
     cout << "Podaj login :";
     cin >> nazwa;
     int i = 0;
@@ -387,7 +392,7 @@ void usunAdresata(vector<Adresat>& adresaci) {
 
 void edytujAdresata(vector<Adresat>& adresaci) {
     int adresatID;
-    int numerPola = 0;
+    char numerPola = '0';
     int indexAdresata = -1;
     string nowePole;
 
@@ -397,7 +402,7 @@ void edytujAdresata(vector<Adresat>& adresaci) {
         cin >> adresatID;
         indexAdresata = znajdzAdresataPoID(adresaci, adresatID);
     }
-    while(numerPola != 9) {
+    while(numerPola != '9') {
         system("cls");
         cout << "EDYCJA" << endl;
         cout << "======" << endl << endl;
@@ -410,27 +415,27 @@ void edytujAdresata(vector<Adresat>& adresaci) {
         cin.sync();
 
         switch(numerPola) {
-        case 1:
+        case '1':
             cout << "Podaj nowe imie: ";
             getline(cin, nowePole);
             adresaci[indexAdresata].imie = nowePole;
             break;
-        case 2:
+        case '2':
             cout << "Podaj nowe nazwisko: ";
             getline(cin, nowePole);
             adresaci[indexAdresata].nazwisko = nowePole;
             break;
-        case 3:
+        case '3':
             cout << "Podaj nowy numer telefonu: ";
             getline(cin, nowePole);
             adresaci[indexAdresata].numerTelefonu = nowePole;
             break;
-        case 4:
+        case '4':
             cout << "Podaj nowy adres: ";
             getline(cin, nowePole);
             adresaci[indexAdresata].adres = nowePole;
             break;
-        case 5:
+        case '5':
             cout << "Podaj nowy email: ";
             getline(cin, nowePole);
             adresaci[indexAdresata].email = nowePole;
@@ -467,46 +472,46 @@ int main() {
     while(true) {
         if(idZalogowanegoUzytkownika == 0) {
             switch  (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
-            case 1:
+            case '1':
                 uzytkownicy.push_back(rejestracja(uzytkownicy));
                 zapiszUzytkownicyDoPliku(uzytkownicy);
                 break;
-            case 2:
+            case '2':
                 idZalogowanegoUzytkownika = logowanie(uzytkownicy);
                 idOstatniegoAdresata = pobierzAdresatowZPliku(adresaci, idZalogowanegoUzytkownika);
                 break;
-            case 9:
+            case '9':
                 exit(0);
             }
         } else {
             switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
-            case 1:
+            case '1':
                 DodajAdresata(adresaci, idOstatniegoAdresata);
                 idOstatniegoAdresata++;
                 break;
-            case 2:
+            case '2':
                 wyswietlAdresataImie(adresaci);
                 break;
-            case 3:
+            case '3':
                 wyswietlAdresataNazwisko(adresaci);
                 break;
-            case 4:
+            case '4':
                 wyswietlWszystkichAdresatow(adresaci);
                 cout << "\n\n\nAby wyjœæ naciœnij Enter";
                 getchar();
                 getchar();
                 break;
-            case 5:
+            case '5':
                 usunAdresata(adresaci);
                 break;
-            case 6:
+            case '6':
                 edytujAdresata(adresaci);
                 break;
-            case 7:
+            case '7':
                 zmianaHasla(uzytkownicy, idZalogowanegoUzytkownika);
                 zapiszUzytkownicyDoPliku(uzytkownicy);
                 break;
-            case 9:
+            case '9':
                 zapiszAdresaciDoPliku(adresaci,idZalogowanegoUzytkownika);
                 adresaci.clear();
                 idZalogowanegoUzytkownika = 0;
