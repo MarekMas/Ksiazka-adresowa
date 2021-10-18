@@ -16,6 +16,85 @@ struct Adresat {
     string imie = "", nazwisko = "", numerTelefonu = "", email = "", adres = "";
 };
 
+char wybierzOpcjeZMenu(int idZalogowanegoUzytkownika);
+Uzytkownik rejestracja(vector <Uzytkownik> uzytkownicy);
+int logowanie(vector <Uzytkownik> uzytkownicy);
+string wyodrebnijPoleWPobranejLinii(string &linia);
+string sprawdzPoleWPobranejLinii(string linia, int nrPola);
+void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
+void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy);
+int znajdzidOstatniegoAdresata(string linia);
+int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
+void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy);
+void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata);
+void wyswietlTegoAdresata (Adresat tenAdresat);
+void wyswietlWszystkichAdresatow(vector<Adresat> adresaci);
+void wyswietlAdresataImie(vector<Adresat> adresaci);
+void wyswietlAdresataNazwisko(vector<Adresat> adresaci);
+int znajdzAdresataPoID(vector<Adresat> adresaci, int numerID);
+void usunAdresata(vector<Adresat>& adresaci);
+void edytujAdresata(vector<Adresat>& adresaci);
+void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika);
+
+int main() {
+    vector <Uzytkownik> uzytkownicy;
+    vector<Adresat> adresaci;
+    int idZalogowanegoUzytkownika = 0;
+    int idOstatniegoAdresata;
+    pobierzUzytkownikowZPliku(uzytkownicy);
+    while(true) {
+        if(idZalogowanegoUzytkownika == 0) {
+            switch  (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
+            case '1':
+                uzytkownicy.push_back(rejestracja(uzytkownicy));
+                zapiszUzytkownicyDoPliku(uzytkownicy);
+                break;
+            case '2':
+                idZalogowanegoUzytkownika = logowanie(uzytkownicy);
+                idOstatniegoAdresata = pobierzAdresatowZPliku(adresaci, idZalogowanegoUzytkownika);
+                break;
+            case '9':
+                exit(0);
+            }
+        } else {
+            switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
+            case '1':
+                DodajAdresata(adresaci, idOstatniegoAdresata);
+                idOstatniegoAdresata++;
+                break;
+            case '2':
+                wyswietlAdresataImie(adresaci);
+                break;
+            case '3':
+                wyswietlAdresataNazwisko(adresaci);
+                break;
+            case '4':
+                wyswietlWszystkichAdresatow(adresaci);
+                cout << "\n\n\nAby wyj˜† naci˜nij Enter";
+                getchar();
+                getchar();
+                break;
+            case '5':
+                usunAdresata(adresaci);
+                break;
+            case '6':
+                edytujAdresata(adresaci);
+                break;
+            case '7':
+                zmianaHasla(uzytkownicy, idZalogowanegoUzytkownika);
+                zapiszUzytkownicyDoPliku(uzytkownicy);
+                break;
+            case '9':
+                zapiszAdresaciDoPliku(adresaci,idZalogowanegoUzytkownika);
+                adresaci.clear();
+                idZalogowanegoUzytkownika = 0;
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
 char wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
     system("cls");
     char n;
@@ -103,7 +182,7 @@ int logowanie(vector <Uzytkownik> uzytkownicy) {
     return 0;
 }
 
-string wyodrebnijPole(string &linia) {
+string wyodrebnijPoleWPobranejLinii(string &linia) {
     int pozycjaZnakuSeperacji = linia.find("|");
     string pole = "";
 
@@ -118,10 +197,10 @@ string wyodrebnijPole(string &linia) {
 
 }
 
-string sprawdzPole(string linia, int nrPola) {
+string sprawdzPoleWPobranejLinii(string linia, int nrPola) {
     string pole = "";
     for(int i = 0; i< nrPola; i++) {
-        pole =  wyodrebnijPole(linia);
+        pole =  wyodrebnijPoleWPobranejLinii(linia);
     }
 
     return pole;
@@ -138,8 +217,8 @@ void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
     plikTymczasowy.open("tymczasowa_lista_adresow.txt", ios::out);
 
     while(getline(plik,linia)) {
-        idAdresata = atoi(sprawdzPole(linia,1).c_str());
-        idUzytkownika = atoi(sprawdzPole(linia,2).c_str());
+        idAdresata = atoi(sprawdzPoleWPobranejLinii(linia,1).c_str());
+        idUzytkownika = atoi(sprawdzPoleWPobranejLinii(linia,2).c_str());
 
 
         if(adresaci.size() > 0 && idAdresata == adresaci[0].id) {
@@ -176,20 +255,13 @@ void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy) {
     plik.close();
 }
 
-int ZnajdzIdUzytkownikaWLiniPliku(string linia) {
-
-    int IdUzytkownikaZLiniPliku;
-    wyodrebnijPole(linia);
-    IdUzytkownikaZLiniPliku = atoi(wyodrebnijPole(linia).c_str());
-    return IdUzytkownikaZLiniPliku;
-}
-
 int znajdzidOstatniegoAdresata(string linia) {
-    return atoi(wyodrebnijPole(linia).c_str());
+    return atoi(wyodrebnijPoleWPobranejLinii(linia).c_str());
 }
 
 int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika) {
     int idOstatniegoAdresata = 0;
+    int idUzytkownika = 0;
     if(idZalogowanegoUzytkownika != 0) {
 
         fstream plik;
@@ -197,16 +269,18 @@ int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
         string linia;
         while(getline(plik,linia)) {
             idOstatniegoAdresata = znajdzidOstatniegoAdresata(linia);
-            if (ZnajdzIdUzytkownikaWLiniPliku(linia) == idZalogowanegoUzytkownika) {
+            idUzytkownika = atoi(sprawdzPoleWPobranejLinii(linia, 2).c_str());
+
+            if (idUzytkownika == idZalogowanegoUzytkownika) {
                 int index = adresaci.size();
                 adresaci.push_back(Adresat());
-                adresaci[index].id = atoi(wyodrebnijPole(linia).c_str());
-                wyodrebnijPole(linia);
-                adresaci[index].imie = wyodrebnijPole(linia);
-                adresaci[index].nazwisko = wyodrebnijPole(linia);
-                adresaci[index].numerTelefonu = wyodrebnijPole(linia);
-                adresaci[index].email = wyodrebnijPole(linia);
-                adresaci[index].adres = wyodrebnijPole(linia);
+                adresaci[index].id = atoi(wyodrebnijPoleWPobranejLinii(linia).c_str());
+                wyodrebnijPoleWPobranejLinii(linia);
+                adresaci[index].imie = wyodrebnijPoleWPobranejLinii(linia);
+                adresaci[index].nazwisko = wyodrebnijPoleWPobranejLinii(linia);
+                adresaci[index].numerTelefonu = wyodrebnijPoleWPobranejLinii(linia);
+                adresaci[index].email = wyodrebnijPoleWPobranejLinii(linia);
+                adresaci[index].adres = wyodrebnijPoleWPobranejLinii(linia);
             }
         }
         plik.close();
@@ -221,9 +295,9 @@ void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy) {
     while(getline(plik,linia)) {
         int index = uzytkownicy.size();
         uzytkownicy.push_back(Uzytkownik());
-        uzytkownicy[index].id = atoi(wyodrebnijPole(linia).c_str());
-        uzytkownicy[index].nazwa = wyodrebnijPole(linia);
-        uzytkownicy[index].haslo = wyodrebnijPole(linia);
+        uzytkownicy[index].id = atoi(wyodrebnijPoleWPobranejLinii(linia).c_str());
+        uzytkownicy[index].nazwa = wyodrebnijPoleWPobranejLinii(linia);
+        uzytkownicy[index].haslo = wyodrebnijPoleWPobranejLinii(linia);
     }
     plik.close();
 }
@@ -458,63 +532,4 @@ void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika)
             break;
         }
     }
-}
-
-int main() {
-    vector <Uzytkownik> uzytkownicy;
-    vector<Adresat> adresaci;
-    int idZalogowanegoUzytkownika = 0;
-    int idOstatniegoAdresata;
-    pobierzUzytkownikowZPliku(uzytkownicy);
-    while(true) {
-        if(idZalogowanegoUzytkownika == 0) {
-            switch  (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
-            case '1':
-                uzytkownicy.push_back(rejestracja(uzytkownicy));
-                zapiszUzytkownicyDoPliku(uzytkownicy);
-                break;
-            case '2':
-                idZalogowanegoUzytkownika = logowanie(uzytkownicy);
-                idOstatniegoAdresata = pobierzAdresatowZPliku(adresaci, idZalogowanegoUzytkownika);
-                break;
-            case '9':
-                exit(0);
-            }
-        } else {
-            switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
-            case '1':
-                DodajAdresata(adresaci, idOstatniegoAdresata);
-                idOstatniegoAdresata++;
-                break;
-            case '2':
-                wyswietlAdresataImie(adresaci);
-                break;
-            case '3':
-                wyswietlAdresataNazwisko(adresaci);
-                break;
-            case '4':
-                wyswietlWszystkichAdresatow(adresaci);
-                cout << "\n\n\nAby wyj˜† naci˜nij Enter";
-                getchar();
-                getchar();
-                break;
-            case '5':
-                usunAdresata(adresaci);
-                break;
-            case '6':
-                edytujAdresata(adresaci);
-                break;
-            case '7':
-                zmianaHasla(uzytkownicy, idZalogowanegoUzytkownika);
-                zapiszUzytkownicyDoPliku(uzytkownicy);
-                break;
-            case '9':
-                zapiszAdresaciDoPliku(adresaci,idZalogowanegoUzytkownika);
-                adresaci.clear();
-                idZalogowanegoUzytkownika = 0;
-                break;
-            }
-        }
-    }
-    return 0;
 }
