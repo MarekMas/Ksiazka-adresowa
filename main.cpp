@@ -21,9 +21,9 @@ Uzytkownik rejestracja(vector <Uzytkownik> uzytkownicy);
 int logowanie(vector <Uzytkownik> uzytkownicy);
 string wyodrebnijPoleWPobranejLinii(string &linia);
 string sprawdzPoleWPobranejLinii(string linia, int nrPola);
-void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
 void usunAdresataZPliku(Adresat adresat);
 void dodajAdresataDoPliku(Adresat adresat, int idZalogowanegoUzytkownika);
+void zmienDaneAdresataWPliku(Adresat adresat, int idZalogowanegoUzytkownika);
 void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy);
 int znajdzidOstatniegoAdresata(string linia);
 int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
@@ -87,7 +87,6 @@ int main() {
                 zapiszUzytkownicyDoPliku(uzytkownicy);
                 break;
             case '9':
-                //zapiszAdresaciDoPliku(adresaci,idZalogowanegoUzytkownika);
                 adresaci.clear();
                 idZalogowanegoUzytkownika = 0;
                 break;
@@ -291,7 +290,7 @@ void dodajAdresataDoPliku(Adresat adresat, int idZalogowanegoUzytkownika) {
     plik.close();
 }
 
-void zmienDaneAdresatWPliku(Adresat adresat, int idZalogowanegoUzytkownika) {
+void zmienDaneAdresataWPliku(Adresat adresat, int idZalogowanegoUzytkownika) {
     fstream plik;
     fstream plikTymczasowy;
     string linia = "";
@@ -606,7 +605,7 @@ void edytujAdresata(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika) {
             break;
         }
     }
-    zmienDaneAdresatWPliku(adresaci[indexAdresata], idZalogowanegoUzytkownika);
+    zmienDaneAdresataWPliku(adresaci[indexAdresata], idZalogowanegoUzytkownika);
 
 }
 
