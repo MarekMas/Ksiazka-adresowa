@@ -22,11 +22,13 @@ int logowanie(vector <Uzytkownik> uzytkownicy);
 string wyodrebnijPoleWPobranejLinii(string &linia);
 string sprawdzPoleWPobranejLinii(string linia, int nrPola);
 void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
+void usunAdresataZPliku(Adresat adresat);
+void dodajAdresataDoPliku(Adresat adresat, int idZalogowanegoUzytkownika);
 void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy);
 int znajdzidOstatniegoAdresata(string linia);
 int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
 void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy);
-void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata);
+void dodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata, int idZalogowanegoUzytkownika);
 void wyswietlTegoAdresata (Adresat tenAdresat);
 void wyswietlWszystkichAdresatow(vector<Adresat> adresaci);
 void wyswietlAdresataImie(vector<Adresat> adresaci);
@@ -59,7 +61,7 @@ int main() {
         } else {
             switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
             case '1':
-                DodajAdresata(adresaci, idOstatniegoAdresata);
+                dodajAdresata(adresaci, idOstatniegoAdresata, idZalogowanegoUzytkownika);
                 idOstatniegoAdresata++;
                 break;
             case '2':
@@ -277,6 +279,18 @@ void usunAdresataZPliku(Adresat adresat){
     rename( "tymczasowa_lista_adresow.txt", "lista_adresow.txt" );
 }
 
+void dodajAdresataDoPliku(Adresat adresat, int idZalogowanegoUzytkownika){
+
+    fstream plik;
+    plik.open("lista_adresow.txt", ios::out | ios::app);
+
+    plik << adresat.id << "|" << idZalogowanegoUzytkownika << "|" << adresat.imie << "|";
+    plik << adresat.nazwisko << "|" << adresat.numerTelefonu <<"|";
+    plik << adresat.email << "|" << adresat.adres << endl;
+
+    plik.close();
+}
+
 void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy) {
     fstream plik;
 
@@ -344,7 +358,7 @@ void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy) {
     plik.close();
 }
 
-void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata) {
+void dodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata, int idZalogowanegoUzytkownika) {
     system("cls");
     int index = adresaci.size();
     adresaci.push_back(Adresat());
@@ -371,6 +385,8 @@ void DodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata) {
 
     cout << "Podaj adres e-mail: ";
     cin >> adresaci[index].email;
+
+    dodajAdresataDoPliku(adresaci[index], idZalogowanegoUzytkownika);
 
     system("cls");
     cout << "Dodano now¥ osob©";
