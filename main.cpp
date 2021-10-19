@@ -214,6 +214,11 @@ void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
     int idUzytkownika;
 
     plik.open("lista_adresow.txt", ios::in);
+    if(plik.good() == false){
+        cout << "Nie udaˆo sie otworzy† pliku i zapisa† w nim danych." << endl;
+        Sleep(2000);
+        exit(0);
+    }
     plikTymczasowy.open("tymczasowa_lista_adresow.txt", ios::out);
 
     while(getline(plik,linia)) {
@@ -245,6 +250,33 @@ void zapiszAdresaciDoPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
 
 }
 
+void usunAdresataZPliku(Adresat adresat){
+    fstream plik;
+    fstream plikTymczasowy;
+    string linia = "";
+    int idAdresata = 0;
+     plik.open("lista_adresow.txt", ios::in);
+    if(plik.good() == false){
+        cout << "Nie udaˆo si© otworzy† pliku i zapisa† w nim danych." << endl;
+        Sleep(2000);
+        exit(0);
+    }
+    plikTymczasowy.open("tymczasowa_lista_adresow.txt", ios::out);
+
+    while(getline(plik,linia)) {
+        idAdresata = atoi(sprawdzPoleWPobranejLinii(linia,1).c_str());
+
+        if(idAdresata != adresat.id) {
+            plikTymczasowy << linia << endl;
+        }
+    }
+    plik.close();
+    plikTymczasowy.close();
+
+    remove("lista_adresow.txt");
+    rename( "tymczasowa_lista_adresow.txt", "lista_adresow.txt" );
+}
+
 void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy) {
     fstream plik;
 
@@ -266,6 +298,11 @@ int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
 
         fstream plik;
         plik.open("lista_adresow.txt", ios::in);
+        if(plik.good() == false){
+        cout << "Nie udaˆo si© pobra† danych dla ksi¥¾ki adresowej." << endl;
+        Sleep(2000);
+        exit(0);
+    }
         string linia;
         while(getline(plik,linia)) {
             idOstatniegoAdresata = znajdzidOstatniegoAdresata(linia);
@@ -291,6 +328,11 @@ int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
 void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy) {
     fstream plik;
     plik.open("Uzytkownicy.txt", ios::in);
+    if(plik.good() == false){
+        cout << "Problem z wczytaniem bazy u¾ytkownik¢w." << endl;
+        Sleep(2000);
+        exit(0);
+    }
     string linia;
     while(getline(plik,linia)) {
         int index = uzytkownicy.size();
@@ -452,6 +494,7 @@ void usunAdresata(vector<Adresat>& adresaci) {
         cout << endl << "Czy napewno chcesz go usun¥†? [t/n] ";
         cin >> potwierdzenie;
         if(potwierdzenie == 't') {
+            usunAdresataZPliku(adresaci[indexAdresata]);
             adresaci.erase(adresaci.begin() + indexAdresata);
             system("cls");
             cout << "Usuni©to";
