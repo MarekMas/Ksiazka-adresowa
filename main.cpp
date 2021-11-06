@@ -3,13 +3,9 @@
 #include <windows.h>
 #include <fstream>
 #include <cstdlib>
+#include "Uzytkownik.h"
 
 using namespace std;
-
-struct Uzytkownik {
-    int id;
-    string nazwa, haslo;
-};
 
 struct Adresat {
     int id = 0;
@@ -17,7 +13,6 @@ struct Adresat {
 };
 
 char wybierzOpcjeZMenu(int idZalogowanegoUzytkownika);
-Uzytkownik rejestracja(vector <Uzytkownik> uzytkownicy);
 int logowanie(vector <Uzytkownik> uzytkownicy);
 string wyodrebnijPoleWPobranejLinii(string &linia);
 string sprawdzPoleWPobranejLinii(string linia, int nrPola);
@@ -27,7 +22,7 @@ void zmienDaneAdresataWPliku(Adresat adresat, int idZalogowanegoUzytkownika);
 void zapiszUzytkownicyDoPliku(vector<Uzytkownik> uzytkownicy);
 int znajdzidOstatniegoAdresata(string linia);
 int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika);
-void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy);
+void pobierzUzytkownikwZPliku(vector<Uzytkownik>& uzytkownicy);
 void dodajAdresata(vector<Adresat>& adresaci, int idOstatniegoAdresata, int idZalogowanegoUzytkownika);
 void wyswietlTegoAdresata (Adresat tenAdresat);
 void wyswietlWszystkichAdresatow(vector<Adresat> adresaci);
@@ -40,23 +35,28 @@ void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika)
 
 int main() {
     vector <Uzytkownik> uzytkownicy;
-    vector<Adresat> adresaci;
+    vector <Adresat> adresaci;
     int idZalogowanegoUzytkownika = 0;
     int idOstatniegoAdresata;
-    pobierzUzytkownikowZPliku(uzytkownicy);
+    pobierzUzytkownikwZPliku(uzytkownicy);
     while(true) {
         if(idZalogowanegoUzytkownika == 0) {
             switch  (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
-            case '1':
-                uzytkownicy.push_back(rejestracja(uzytkownicy));
+            case '1': {
+                Uzytkownik nowyUzytkownik;
+                nowyUzytkownik.rejestracja(uzytkownicy);
+                uzytkownicy.push_back(nowyUzytkownik);
                 zapiszUzytkownicyDoPliku(uzytkownicy);
-                break;
-            case '2':
+            }
+            break;
+            case '2': {
                 idZalogowanegoUzytkownika = logowanie(uzytkownicy);
                 idOstatniegoAdresata = pobierzAdresatowZPliku(adresaci, idZalogowanegoUzytkownika);
                 break;
-            case '9':
+            }
+            case '9': {
                 exit(0);
+            }
             }
         } else {
             switch (wybierzOpcjeZMenu(idZalogowanegoUzytkownika)) {
@@ -112,45 +112,10 @@ char wybierzOpcjeZMenu(int idZalogowanegoUzytkownika) {
     return n;
 }
 
-Uzytkownik rejestracja(vector <Uzytkownik> uzytkownicy) {
-    system("cls");
-    string nazwa, haslo;
-    int iloscUzytkownikow = uzytkownicy.size();
-
-    cout << "REJESTRACJA" << endl;
-    cout << "===========" << endl;
-
-    cout << "Podaj nazw© u¾ytkownika: ";
-    cin >> nazwa;
-    int i = 0;
-
-    while(i < iloscUzytkownikow) {
-        if(uzytkownicy[i].nazwa == nazwa) {
-            cout << "Taki u¾ytkownik istnieje. Wpisz inn¥ nazw© u¾ytkownika: ";
-            cin >> nazwa;
-            i = 0;
-        } else {
-            i++;
-        }
-    }
-    cout << "Podaj hasˆo: ";
-    cin >> haslo;
-    Uzytkownik nowyUzytkownik;
-    nowyUzytkownik.nazwa = nazwa;
-    nowyUzytkownik.haslo = haslo;
-    if(iloscUzytkownikow == 0)
-        nowyUzytkownik.id = 1;
-    else
-        nowyUzytkownik.id = uzytkownicy[iloscUzytkownikow-1].id + 1;
-    cout << "Konto zaˆo¾one" << endl;
-    Sleep(1000);
-    return nowyUzytkownik;
-}
-
 int logowanie(vector <Uzytkownik> uzytkownicy) {
     system("cls");
     string nazwa, haslo;
-    int iloscUzytkownikow = uzytkownicy.size();
+    int iloscUzytkownikw = uzytkownicy.size();
 
     cout << "LOGOWANIE" << endl;
     cout << "=========" << endl;
@@ -159,7 +124,7 @@ int logowanie(vector <Uzytkownik> uzytkownicy) {
     cin >> nazwa;
     int i = 0;
 
-    while(i < iloscUzytkownikow) {
+    while(i < iloscUzytkownikw) {
 
         if(uzytkownicy[i].nazwa == nazwa) {
 
@@ -371,7 +336,7 @@ int pobierzAdresatowZPliku(vector<Adresat>& adresaci, int idZalogowanegoUzytkown
     return idOstatniegoAdresata;
 }
 
-void pobierzUzytkownikowZPliku(vector<Uzytkownik>& uzytkownicy) {
+void pobierzUzytkownikwZPliku(vector<Uzytkownik>& uzytkownicy) {
     fstream plik;
     plik.open("Uzytkownicy.txt", ios::in);
     if(plik.good() == false) {
@@ -612,9 +577,9 @@ void edytujAdresata(vector<Adresat>& adresaci, int idZalogowanegoUzytkownika) {
 void zmianaHasla(vector<Uzytkownik>& uzytkownicy, int idZalogowanegoUzytkownika) {
 
     string nowehaslo;
-    int iloscUzytkownikow = uzytkownicy.size();
+    int iloscUzytkownikw = uzytkownicy.size();
 
-    for(int i = 0; i< iloscUzytkownikow; i++) {
+    for(int i = 0; i< iloscUzytkownikw; i++) {
         if (uzytkownicy[i].id == idZalogowanegoUzytkownika) {
             cout << "Podaj nowe hasˆo: ";
             cin >> nowehaslo;
